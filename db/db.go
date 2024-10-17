@@ -12,7 +12,7 @@ const (
 	host     = "localhost"
 	port     = 5432
 	user     = "postgres"
-	password = "password"
+	password = "bat2001"
 	dbname   = "notesdb"
 )
 
