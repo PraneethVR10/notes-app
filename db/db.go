@@ -4,33 +4,58 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	_ "github.com/lib/pq"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "bat2001"
-	dbname   = "notesdb"
-)
+type DB struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+}
+
+func DBCongif() *DB {
+	return &DB{
+		Host:     os.Getenv("DB_HOST"),
+		Port:     os.Getenv("DB_PORT"),
+		User:     os.Getenv("DB_USER"),
+		Password: os.Getenv("DB_PASSWORD"),
+		DBName:   os.Getenv("DB_NAME"),
+	}
+
+}
 
 func ConnectDB() (*sql.DB, error) {
-	connStr := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		host, port, user, password, dbname)
+	config := DBCongif()
 
-	db, err := sql.Open("postgres", connStr)
+	if config.Host == "" || config.Port == "" || config.User == "" ||
+		config.Password == "" || config.DBName == "" {
+		return nil, fmt.Errorf("missing required database environment variables")
 
-	if err != nil {
-		return nil, err
+	} else {
+		connect := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+			config.Host,
+			config.Port,
+			config.User,
+			config.Password,
+			config.DBName,
+		)
+		db, err := sql.Open("postgres", connect)
+
+		if err != nil {
+			return nil, err
+		}
+
+		err = db.Ping()
+		if err != nil {
+			return nil, err
+		}
+
+		log.Println("Successfully connected to database!")
+		return db, nil
 	}
 
-	err = db.Ping()
-	if err != nil {
-		return nil, err
-	}
-
-	log.Println("Successfully connected to database!")
-	return db, nil
 }
