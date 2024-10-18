@@ -11,7 +11,7 @@ func main() {
 
 	dbConn, err := db.ConnectDB()
 	if err != nil {
-		log.Fatal("could not connect to the Database", err)
+		log.Fatal("could not connect to the Database\n", err)
 	}
 	defer dbConn.Close()
 
@@ -33,6 +33,6 @@ func main() {
 			log.Fatal("error scanning row", err)
 
 		}
-		fmt.Println("ID: %d, Title: %s, Content: %s\n, created_at: %s, updated_at :%s", id, title, content, &created_at, &updated_at)
+		fmt.Printf(" ID: %d,\n Title: %s,\n Content: %s,\n created_at: %s,\n updated_at :%s\n", id, title, content, &created_at, &updated_at)
 	}
 }
