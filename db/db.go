@@ -54,7 +54,7 @@ func ConnectDB() (*sql.DB, error) {
 			return nil, err
 		}
 
-		log.Println("Successfully connected to database!\n")
+		log.Printf("Successfully connected to database!\n")
 		return db, nil
 	}
 
